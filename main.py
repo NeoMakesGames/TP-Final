@@ -8,7 +8,7 @@ def convert_to_grayscale(image, label):
     return image, label
 
 # Load and split the dataset
-data_dir = 'caras'
+data_dir = 'Caras/'
 batch_size = 32
 img_height = 180
 img_width = 180
@@ -34,23 +34,18 @@ outside_ds = tf.keras.utils.image_dataset_from_directory(
     image_size=(180, 180),
     batch_size=32).map(convert_to_grayscale)
 
-AUTOTUNE = tf.data.AUTOTUNE
-
-train_ds = train_ds.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
-val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
-
 model = models.Sequential([
     layers.Conv2D(8, (3,3), padding='same', activation='relu', input_shape=(180, 180, 1)),
     layers.MaxPooling2D((2,2)),
+
     layers.Conv2D(16, (3,3), padding='same', activation='relu'),
     layers.MaxPooling2D((2,2)),
-    #layers.Conv2D(64, 3, padding='same', activation='relu'),
-    #layers.MaxPooling2D(),
+
     layers.Flatten(),
     layers.Dense(32, activation='relu'),
-    layers.Dropout(0.75),  # Dropout layer to reduce overfitting
+
+    layers.Dropout(0.75),
     layers.Dense(16, activation='relu'),
-    #layers.Dropout(0.25),  # Dropout layer to reduce overfitting
     layers.Dense(1, activation='sigmoid')
 ])
 
@@ -61,7 +56,6 @@ model.compile(optimizer='adam',
 epochs = 5
 history = model.fit(
     train_ds,
-    #validation_data=val_ds,
     epochs=epochs
 )
 
