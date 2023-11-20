@@ -1,4 +1,4 @@
-# Creación, Entrenamiento y Validación --> Modelo de IA que detecta si alguien esta usando o no anteojos.
+# Creación, Entrenamiento y Validación --> Modelo de IA que detecta si alguien esta usando o no anteojos a traves de una
 
 # Importamos las librerías
 import tensorflow as tf
@@ -46,19 +46,32 @@ val_ds = tf.keras.utils.image_dataset_from_directory(
     # Especificamos el tamaño del batch. Convierte el dataset a 'grayscale'.   
     batch_size=batch_size).map(convert_to_grayscale)
 
-# Arquitectura del modelo:
+# Arquitectura del modelo en forma sequencial (osea capa por capa):
 model = models.Sequential([
+    #Utiliza 8 kernels de tamaño 3x3. 
+    #La convolución con estos kernels le permite a la red detectar características básicas como bordes, colores y texturas. 
+    #El padding es 'same' para que la imagen de salida tenga el mismo tamaño que la de entrada.
     layers.Conv2D(8, (3,3), padding='same', activation='relu', input_shape=(180, 180, 1)),
+    #MaxPooling reduce el tamaño de la imagen de salida a la mitad al tomar el valor máximo de cada kernel de 2x2 píxeles.
     layers.MaxPooling2D((2,2)),
 
+    #Lo mismo que la capa anterior pero con 16 kernels para ahora detectar patrones mas complejos.
     layers.Conv2D(16, (3,3), padding='same', activation='relu'),
     layers.MaxPooling2D((2,2)),
 
+    #Convierte la matriz de 2D a 1D asi el resto de la red puede procesarla.
     layers.Flatten(),
+
+    #Capa de 32 neuronas con función de activación 'relu'.
     layers.Dense(32, activation='relu'),
 
+    #Le agregamos un dropout entre esta capa y la anterior para evitar el overfitting.
+    #Este tiene un 75% de probabilidad de desactivar una conexión entre dos neuronas.
     layers.Dropout(0.75),
+    #Capa de 16 neuronas con función de activación 'relu'.
     layers.Dense(16, activation='relu'),
+
+    #Capa final con una sola neurona y función de activación 'sigmoid' ya que esta nos devuelve un valor entre 0 y 1.
     layers.Dense(1, activation='sigmoid')
 ])
 

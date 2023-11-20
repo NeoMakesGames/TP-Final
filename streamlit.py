@@ -24,8 +24,8 @@ if camera:
     img = np.array(img)
     #Lo pasamos a blanco y negro porque el color no aporta y solo hace que la IA tenga que procesar más.
     img = tf.image.rgb_to_grayscale(img)
-
-    #img = np.expand_dims(img, axis=0)
+    #Le agregamos una dimension extra al modelo que representa el batch size
+    img = np.expand_dims(img, axis=0)
     #Hacemos la predicción.
     prediction = model.predict(img)
     #Le informamos al usuario dependiendo del resultado.
@@ -44,8 +44,8 @@ if archivo:
     img = np.array(img)
     #Lo pasamos a blanco y negro porque el color no aporta y solo hace que la IA tenga que procesar más.
     img = tf.image.rgb_to_grayscale(img)
-
-    #img = np.expand_dims(img, axis=0)
+    #Le agregamos una dimension extra al modelo que representa el batch size
+    img = np.expand_dims(img, axis=0)
     #Hacemos la predicción.
     prediction = model.predict(img)
     #Le informamos al usuario dependiendo del resultado.
